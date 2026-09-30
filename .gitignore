@@ -1,7 +1,2 @@
 /.gradle/
-/.idea/
 /build/
-/out/
-/*.iml
-
-/src/generated/
