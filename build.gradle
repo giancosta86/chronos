@@ -1,16 +1,13 @@
 buildscript {
     repositories {
-        maven {
-            url 'https://dl.bintray.com/giancosta86/Hephaestus'
-        }
+        //TODO! Del this!
+        mavenLocal()
 
-        jcenter()
+        mavenCentral()
     }
 
     dependencies {
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.6'
-        classpath 'info.gianlucacosta.moonlicense:moonlicense-gradle:4.3'
-        classpath 'info.gianlucacosta.aurora:aurora:6.0'
+        classpath 'info.gianlucacosta.aurora:aurora:10.0.0-SNAPSHOT'
         classpath 'com.github.maiflai:gradle-scalatest:0.12'
     }
 }
@@ -20,28 +17,21 @@ apply plugin: 'scala'
 apply plugin: 'antlr'
 apply plugin: 'application'
 apply plugin: 'maven'
-apply plugin: 'com.jfrog.bintray'
 apply plugin: 'osgi'
 apply plugin: 'com.github.maiflai.scalatest'
-apply plugin: 'info.gianlucacosta.moonlicense'
 apply plugin: 'info.gianlucacosta.aurora'
 
 
 group = 'info.gianlucacosta.chronos'
 archivesBaseName = "chronos"
-version = '4.0'
+version = '5.0.0-SNAPSHOT'
 
 description = 'Programming language for discrete event simulation'
-
-ext.facebookPage = "https://www.facebook.com/chronos.language"
 
 mainClassName = 'info.gianlucacosta.chronos.App'
 
 
 dependencies {
-    generatedCompile 'org.scala-lang:scala-library:2.11.8'
-    generatedCompile 'org.antlr:antlr4-runtime:4.5.3'
-
     compile 'org.scala-lang:scala-library:2.11.8'
     compile 'org.scala-lang:scala-xml:2.11.0-M4'
     compile 'org.antlr:antlr4-runtime:4.5.3'
@@ -63,41 +53,10 @@ aurora {
         email = 'gianluca@gianlucacosta.info'
         url = 'http://gianlucacosta.info/'
     }
-
-    bintray {
-        repo = 'Hephaestus'
-        licenses = ['Apache-2.0']
-        labels = [
-                'programming language',
-                'discrete event simulation',
-                'DES',
-                'interactive',
-                'interpreter',
-                'command-line',
-                'Scala'
-        ]
-    }
 }
-
-
-moonLicense {
-    license = apache2
-
-    productInfo {
-        productName = 'Chronos'
-        inceptionYear = 2015
-        copyrightHolder = 'Gianluca Costa'
-    }
-
-    includes = includes + [
-            /.*\.g4$/: javaFormat
-    ]
-}
-
-
 
 generateGrammarSource {
-    outputDirectory = project.file("src/generated/java/info/gianlucacosta/chronos/parser")
+    outputDirectory = project.file("${project.buildDir}/generated/java/info/gianlucacosta/chronos/parser")
     arguments += [
             '-visitor',
             '-long-messages',
@@ -105,6 +64,5 @@ generateGrammarSource {
             '-Werror'
     ]
 }
-generateGrammarSource.dependsOn("cleanGenerated")
 
-generateArtifactInfo.dependsOn("generateGrammarSource")
+compileScala.dependsOn("generateGrammarSource")
